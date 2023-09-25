@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"net"
-	"time"
 	"tunnel/client"
 	"tunnel/protogen"
 	"tunnel/server"
@@ -15,10 +15,7 @@ import (
 
 func main() {
 	go runServer()
-	for {
-		time.Sleep(1 * time.Second)
-		runClient()
-	}
+	runClient()
 }
 
 func runServer() {
@@ -30,7 +27,7 @@ func runServer() {
 
 	srv := grpc.NewServer([]grpc.ServerOption{}...)
 	protogen.RegisterTunnelServerServer(srv, &server.TunnelServer{})
-	srv.Serve(lis)
+	go srv.Serve(lis)
 }
 
 func runClient() {
@@ -42,7 +39,54 @@ func runClient() {
 		logrus.Error(err)
 		return
 	}
-	c.Send(&protogen.Request{Payload: []byte("Hello World")})
-	logrus.Info(c.Recv())
-	c.CloseSend()
+
+	for {
+		in, err := c.Recv()
+		if err == io.EOF {
+			logrus.Info("EOF")
+			return
+		}
+		if err != nil {
+			logrus.Error(err)
+			return
+		}
+
+		d_tcpAddr, err := net.ResolveTCPAddr("tcp4", "127.0.0.1:8899")
+		if err != nil {
+			logrus.Error(err)
+			return
+		}
+
+		d_conn, err := net.DialTCP("tcp", nil, d_tcpAddr)
+		if err != nil {
+			logrus.Error(err)
+			return
+		}
+
+		go func(d_conn *net.TCPConn) {
+			defer d_conn.Close()
+
+			for {
+				recv_data := make([]byte, 1024)
+				n, err := d_conn.Read(recv_data)
+				if err != nil {
+					if err != io.EOF {
+						logrus.Error("read data from d_conn", err)
+					}
+					break
+				}
+
+				if err := c.Send(&protogen.Request{Payload: recv_data[:n]}); err != nil {
+					logrus.Error("send data to server", err)
+					break
+				}
+			}
+		}(d_conn)
+
+		if _, err := d_conn.Write(in.Payload); err != nil {
+			logrus.Error("send in data to d_conn", err)
+			d_conn.Close()
+			return
+		}
+	}
 }

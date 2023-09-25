@@ -118,6 +118,69 @@ func (x *Response) GetPayload() []byte {
 	return nil
 }
 
+type Tunnel struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id       string `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	Port     int64  `protobuf:"varint,2,opt,name=Port,proto3" json:"Port,omitempty"`
+	ClientId string `protobuf:"bytes,3,opt,name=ClientId,proto3" json:"ClientId,omitempty"`
+}
+
+func (x *Tunnel) Reset() {
+	*x = Tunnel{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_idl_tunnel_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Tunnel) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Tunnel) ProtoMessage() {}
+
+func (x *Tunnel) ProtoReflect() protoreflect.Message {
+	mi := &file_idl_tunnel_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Tunnel.ProtoReflect.Descriptor instead.
+func (*Tunnel) Descriptor() ([]byte, []int) {
+	return file_idl_tunnel_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Tunnel) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Tunnel) GetPort() int64 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
+}
+
+func (x *Tunnel) GetClientId() string {
+	if x != nil {
+		return x.ClientId
+	}
+	return ""
+}
+
 var File_idl_tunnel_proto protoreflect.FileDescriptor
 
 var file_idl_tunnel_proto_rawDesc = []byte{
@@ -126,12 +189,18 @@ var file_idl_tunnel_proto_rawDesc = []byte{
 	0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07,
 	0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x24, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x32, 0x2f, 0x0a,
-	0x0c, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1f, 0x0a,
-	0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x08, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x09, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x42, 0x0c,
-	0x5a, 0x0a, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x48, 0x0a,
+	0x06, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x50, 0x6f, 0x72, 0x74, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x50, 0x6f, 0x72, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x32, 0x4d, 0x0a, 0x0c, 0x54, 0x75, 0x6e, 0x6e, 0x65,
+	0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1f, 0x0a, 0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12,
+	0x08, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x09, 0x2e, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x12, 0x1c, 0x0a, 0x08, 0x52, 0x65, 0x67, 0x69,
+	0x73, 0x74, 0x65, 0x72, 0x12, 0x07, 0x2e, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x1a, 0x07, 0x2e,
+	0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x42, 0x0c, 0x5a, 0x0a, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -146,16 +215,19 @@ func file_idl_tunnel_proto_rawDescGZIP() []byte {
 	return file_idl_tunnel_proto_rawDescData
 }
 
-var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_idl_tunnel_proto_goTypes = []interface{}{
 	(*Request)(nil),  // 0: Request
 	(*Response)(nil), // 1: Response
+	(*Tunnel)(nil),   // 2: Tunnel
 }
 var file_idl_tunnel_proto_depIdxs = []int32{
 	0, // 0: TunnelServer.Call:input_type -> Request
-	1, // 1: TunnelServer.Call:output_type -> Response
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: TunnelServer.Register:input_type -> Tunnel
+	1, // 2: TunnelServer.Call:output_type -> Response
+	2, // 3: TunnelServer.Register:output_type -> Tunnel
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -191,6 +263,18 @@ func file_idl_tunnel_proto_init() {
 				return nil
 			}
 		}
+		file_idl_tunnel_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Tunnel); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -198,7 +282,7 @@ func file_idl_tunnel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_idl_tunnel_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -225,6 +309,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type TunnelServerClient interface {
 	Call(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_CallClient, error)
+	Register(ctx context.Context, in *Tunnel, opts ...grpc.CallOption) (*Tunnel, error)
 }
 
 type tunnelServerClient struct {
@@ -266,9 +351,19 @@ func (x *tunnelServerCallClient) Recv() (*Response, error) {
 	return m, nil
 }
 
+func (c *tunnelServerClient) Register(ctx context.Context, in *Tunnel, opts ...grpc.CallOption) (*Tunnel, error) {
+	out := new(Tunnel)
+	err := c.cc.Invoke(ctx, "/TunnelServer/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TunnelServerServer is the server API for TunnelServer service.
 type TunnelServerServer interface {
 	Call(TunnelServer_CallServer) error
+	Register(context.Context, *Tunnel) (*Tunnel, error)
 }
 
 // UnimplementedTunnelServerServer can be embedded to have forward compatible implementations.
@@ -277,6 +372,9 @@ type UnimplementedTunnelServerServer struct {
 
 func (*UnimplementedTunnelServerServer) Call(TunnelServer_CallServer) error {
 	return status.Errorf(codes.Unimplemented, "method Call not implemented")
+}
+func (*UnimplementedTunnelServerServer) Register(context.Context, *Tunnel) (*Tunnel, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 
 func RegisterTunnelServerServer(s *grpc.Server, srv TunnelServerServer) {
@@ -309,10 +407,33 @@ func (x *tunnelServerCallServer) Recv() (*Request, error) {
 	return m, nil
 }
 
+func _TunnelServer_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Tunnel)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TunnelServerServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/TunnelServer/Register",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TunnelServerServer).Register(ctx, req.(*Tunnel))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _TunnelServer_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "TunnelServer",
 	HandlerType: (*TunnelServerServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Register",
+			Handler:    _TunnelServer_Register_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Call",
