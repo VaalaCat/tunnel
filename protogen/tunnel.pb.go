@@ -24,7 +24,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Package struct {
+type Request struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -32,8 +32,8 @@ type Package struct {
 	Payload []byte `protobuf:"bytes,1,opt,name=Payload,proto3" json:"Payload,omitempty"`
 }
 
-func (x *Package) Reset() {
-	*x = Package{}
+func (x *Request) Reset() {
+	*x = Request{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_idl_tunnel_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -41,13 +41,13 @@ func (x *Package) Reset() {
 	}
 }
 
-func (x *Package) String() string {
+func (x *Request) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Package) ProtoMessage() {}
+func (*Request) ProtoMessage() {}
 
-func (x *Package) ProtoReflect() protoreflect.Message {
+func (x *Request) ProtoReflect() protoreflect.Message {
 	mi := &file_idl_tunnel_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,12 +59,59 @@ func (x *Package) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Package.ProtoReflect.Descriptor instead.
-func (*Package) Descriptor() ([]byte, []int) {
+// Deprecated: Use Request.ProtoReflect.Descriptor instead.
+func (*Request) Descriptor() ([]byte, []int) {
 	return file_idl_tunnel_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Package) GetPayload() []byte {
+func (x *Request) GetPayload() []byte {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+type Response struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Payload []byte `protobuf:"bytes,1,opt,name=Payload,proto3" json:"Payload,omitempty"`
+}
+
+func (x *Response) Reset() {
+	*x = Response{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_idl_tunnel_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Response) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Response) ProtoMessage() {}
+
+func (x *Response) ProtoReflect() protoreflect.Message {
+	mi := &file_idl_tunnel_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Response.ProtoReflect.Descriptor instead.
+func (*Response) Descriptor() ([]byte, []int) {
+	return file_idl_tunnel_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Response) GetPayload() []byte {
 	if x != nil {
 		return x.Payload
 	}
@@ -75,17 +122,16 @@ var File_idl_tunnel_proto protoreflect.FileDescriptor
 
 var file_idl_tunnel_proto_rawDesc = []byte{
 	0x0a, 0x10, 0x69, 0x64, 0x6c, 0x2f, 0x74, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x22, 0x23, 0x0a, 0x07, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x12, 0x18, 0x0a,
+	0x74, 0x6f, 0x22, 0x23, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a,
 	0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07,
-	0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x32, 0x6f, 0x0a, 0x0c, 0x54, 0x75, 0x6e, 0x6e, 0x65,
-	0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1d, 0x0a, 0x07, 0x43, 0x6f, 0x6e, 0x6e, 0x65,
-	0x63, 0x74, 0x12, 0x08, 0x2e, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x1a, 0x08, 0x2e, 0x50,
-	0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x12, 0x20, 0x0a, 0x0a, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x6e,
-	0x6e, 0x65, 0x63, 0x74, 0x12, 0x08, 0x2e, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x1a, 0x08,
-	0x2e, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x12, 0x1e, 0x0a, 0x04, 0x44, 0x61, 0x74, 0x61,
-	0x12, 0x08, 0x2e, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x1a, 0x08, 0x2e, 0x50, 0x61, 0x63,
-	0x6b, 0x61, 0x67, 0x65, 0x28, 0x01, 0x30, 0x01, 0x42, 0x0c, 0x5a, 0x0a, 0x2e, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x24, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x32, 0x2f, 0x0a,
+	0x0c, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1f, 0x0a,
+	0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x08, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x09, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x42, 0x0c,
+	0x5a, 0x0a, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -100,19 +146,16 @@ func file_idl_tunnel_proto_rawDescGZIP() []byte {
 	return file_idl_tunnel_proto_rawDescData
 }
 
-var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_idl_tunnel_proto_goTypes = []interface{}{
-	(*Package)(nil), // 0: Package
+	(*Request)(nil),  // 0: Request
+	(*Response)(nil), // 1: Response
 }
 var file_idl_tunnel_proto_depIdxs = []int32{
-	0, // 0: TunnelServer.Connect:input_type -> Package
-	0, // 1: TunnelServer.Disconnect:input_type -> Package
-	0, // 2: TunnelServer.Data:input_type -> Package
-	0, // 3: TunnelServer.Connect:output_type -> Package
-	0, // 4: TunnelServer.Disconnect:output_type -> Package
-	0, // 5: TunnelServer.Data:output_type -> Package
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	0, // 0: TunnelServer.Call:input_type -> Request
+	1, // 1: TunnelServer.Call:output_type -> Response
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -125,7 +168,19 @@ func file_idl_tunnel_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_idl_tunnel_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Package); i {
+			switch v := v.(*Request); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_idl_tunnel_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -143,7 +198,7 @@ func file_idl_tunnel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_idl_tunnel_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -169,9 +224,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type TunnelServerClient interface {
-	Connect(ctx context.Context, in *Package, opts ...grpc.CallOption) (*Package, error)
-	Disconnect(ctx context.Context, in *Package, opts ...grpc.CallOption) (*Package, error)
-	Data(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_DataClient, error)
+	Call(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_CallClient, error)
 }
 
 type tunnelServerClient struct {
@@ -182,49 +235,31 @@ func NewTunnelServerClient(cc grpc.ClientConnInterface) TunnelServerClient {
 	return &tunnelServerClient{cc}
 }
 
-func (c *tunnelServerClient) Connect(ctx context.Context, in *Package, opts ...grpc.CallOption) (*Package, error) {
-	out := new(Package)
-	err := c.cc.Invoke(ctx, "/TunnelServer/Connect", in, out, opts...)
+func (c *tunnelServerClient) Call(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_CallClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_TunnelServer_serviceDesc.Streams[0], "/TunnelServer/Call", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
-}
-
-func (c *tunnelServerClient) Disconnect(ctx context.Context, in *Package, opts ...grpc.CallOption) (*Package, error) {
-	out := new(Package)
-	err := c.cc.Invoke(ctx, "/TunnelServer/Disconnect", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tunnelServerClient) Data(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_DataClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_TunnelServer_serviceDesc.Streams[0], "/TunnelServer/Data", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &tunnelServerDataClient{stream}
+	x := &tunnelServerCallClient{stream}
 	return x, nil
 }
 
-type TunnelServer_DataClient interface {
-	Send(*Package) error
-	Recv() (*Package, error)
+type TunnelServer_CallClient interface {
+	Send(*Request) error
+	Recv() (*Response, error)
 	grpc.ClientStream
 }
 
-type tunnelServerDataClient struct {
+type tunnelServerCallClient struct {
 	grpc.ClientStream
 }
 
-func (x *tunnelServerDataClient) Send(m *Package) error {
+func (x *tunnelServerCallClient) Send(m *Request) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *tunnelServerDataClient) Recv() (*Package, error) {
-	m := new(Package)
+func (x *tunnelServerCallClient) Recv() (*Response, error) {
+	m := new(Response)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -233,85 +268,41 @@ func (x *tunnelServerDataClient) Recv() (*Package, error) {
 
 // TunnelServerServer is the server API for TunnelServer service.
 type TunnelServerServer interface {
-	Connect(context.Context, *Package) (*Package, error)
-	Disconnect(context.Context, *Package) (*Package, error)
-	Data(TunnelServer_DataServer) error
+	Call(TunnelServer_CallServer) error
 }
 
 // UnimplementedTunnelServerServer can be embedded to have forward compatible implementations.
 type UnimplementedTunnelServerServer struct {
 }
 
-func (*UnimplementedTunnelServerServer) Connect(context.Context, *Package) (*Package, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
-}
-func (*UnimplementedTunnelServerServer) Disconnect(context.Context, *Package) (*Package, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Disconnect not implemented")
-}
-func (*UnimplementedTunnelServerServer) Data(TunnelServer_DataServer) error {
-	return status.Errorf(codes.Unimplemented, "method Data not implemented")
+func (*UnimplementedTunnelServerServer) Call(TunnelServer_CallServer) error {
+	return status.Errorf(codes.Unimplemented, "method Call not implemented")
 }
 
 func RegisterTunnelServerServer(s *grpc.Server, srv TunnelServerServer) {
 	s.RegisterService(&_TunnelServer_serviceDesc, srv)
 }
 
-func _TunnelServer_Connect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Package)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TunnelServerServer).Connect(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/TunnelServer/Connect",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TunnelServerServer).Connect(ctx, req.(*Package))
-	}
-	return interceptor(ctx, in, info, handler)
+func _TunnelServer_Call_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(TunnelServerServer).Call(&tunnelServerCallServer{stream})
 }
 
-func _TunnelServer_Disconnect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Package)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TunnelServerServer).Disconnect(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/TunnelServer/Disconnect",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TunnelServerServer).Disconnect(ctx, req.(*Package))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TunnelServer_Data_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(TunnelServerServer).Data(&tunnelServerDataServer{stream})
-}
-
-type TunnelServer_DataServer interface {
-	Send(*Package) error
-	Recv() (*Package, error)
+type TunnelServer_CallServer interface {
+	Send(*Response) error
+	Recv() (*Request, error)
 	grpc.ServerStream
 }
 
-type tunnelServerDataServer struct {
+type tunnelServerCallServer struct {
 	grpc.ServerStream
 }
 
-func (x *tunnelServerDataServer) Send(m *Package) error {
+func (x *tunnelServerCallServer) Send(m *Response) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *tunnelServerDataServer) Recv() (*Package, error) {
-	m := new(Package)
+func (x *tunnelServerCallServer) Recv() (*Request, error) {
+	m := new(Request)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -321,20 +312,11 @@ func (x *tunnelServerDataServer) Recv() (*Package, error) {
 var _TunnelServer_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "TunnelServer",
 	HandlerType: (*TunnelServerServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Connect",
-			Handler:    _TunnelServer_Connect_Handler,
-		},
-		{
-			MethodName: "Disconnect",
-			Handler:    _TunnelServer_Disconnect_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Data",
-			Handler:       _TunnelServer_Data_Handler,
+			StreamName:    "Call",
+			Handler:       _TunnelServer_Call_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

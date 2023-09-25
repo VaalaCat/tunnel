@@ -1,7 +1,7 @@
 package server
 
 import (
-	"context"
+	"io"
 	"tunnel/protogen"
 
 	"github.com/sirupsen/logrus"
@@ -9,17 +9,18 @@ import (
 
 type TunnelServer struct{}
 
-func (t *TunnelServer) Connect(ctx context.Context, pkg *protogen.Package) (*protogen.Package, error) {
-	logrus.Info("Connect")
-	return pkg, nil
-}
-
-func (t *TunnelServer) Disconnect(ctx context.Context, pkg *protogen.Package) (*protogen.Package, error) {
-	logrus.Info("Disconnect")
-	return pkg, nil
-}
-
-func (t *TunnelServer) Data(srv protogen.TunnelServer_DataServer) error {
-	logrus.Info("Data")
-	return nil
+func (t *TunnelServer) Call(srv protogen.TunnelServer_CallServer) error {
+	for {
+		in, err := srv.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		logrus.Info(string(in.Payload))
+		if err := srv.Send(&protogen.Response{Payload: in.Payload}); err != nil {
+			return err
+		}
+	}
 }

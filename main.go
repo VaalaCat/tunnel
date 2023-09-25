@@ -37,12 +37,12 @@ func runClient() {
 	cli, conn := client.NewClient()
 	defer conn.Close()
 
-	k, err := cli.Connect(context.Background(), &protogen.Package{
-		Payload: []byte("hello"),
-	})
+	c, err := cli.Call(context.Background())
 	if err != nil {
 		logrus.Error(err)
 		return
 	}
-	logrus.Info(k)
+	c.Send(&protogen.Request{Payload: []byte("Hello World")})
+	logrus.Info(c.Recv())
+	c.CloseSend()
 }
