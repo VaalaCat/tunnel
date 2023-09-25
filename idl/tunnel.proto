@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = "./protogen";
+
+message Package {
+	bytes Payload = 1;
+}
+
+service TunnelServer {
+	rpc Connect(Package) returns (Package);
+	rpc Disconnect(Package) returns (Package);
+	rpc Data(stream Package) returns (stream Package);
+}
