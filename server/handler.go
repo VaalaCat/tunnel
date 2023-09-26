@@ -9,7 +9,7 @@ import (
 type TunnelServer struct{}
 
 func (t *TunnelServer) Call(srv protogen.TunnelServer_CallServer) error {
-	return forwarder.ListenAndServe("8080", srv)
+	return forwarder.ListenAndServe(srv)
 }
 
 func (*TunnelServer) Register(ctx context.Context, t *protogen.Tunnel) (*protogen.Tunnel, error) {

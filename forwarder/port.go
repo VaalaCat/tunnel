@@ -5,62 +5,71 @@ import (
 	"io"
 	"net"
 	"os"
+	"tunnel/config"
 	"tunnel/protogen"
+
+	"github.com/sirupsen/logrus"
 )
 
-func ListenAndServe(localport string, cli protogen.TunnelServer_CallServer) (err error) {
-	var dest_con net.Conn
+var dest_con net.Conn
+var l net.Listener
 
+func init() {
+	var err error
 	host := "0.0.0.0"
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, localport))
+	l, err = net.Listen("tcp", fmt.Sprintf("%s:%d", host, config.Get().ServerIngressPort))
 	if err != nil {
 		fmt.Println(err, err.Error())
 		os.Exit(0)
 	}
+}
 
-	defer l.Close()
-
+func ListenAndServe(cli protogen.TunnelServer_CallServer) (err error) {
 	for {
 		dest_con, err = l.Accept()
 		if err != nil {
 			continue
 		}
+		logrus.Info("new connection")
 
-		go func() {
-			recv_data := make([]byte, 1024)
+		go func(dest_con net.Conn) {
 			for {
+				recv_data := make([]byte, 1024)
 				n, err := dest_con.Read(recv_data)
-				if err != nil {
-					fmt.Println(err, err.Error())
-					dest_con.Close()
-					break
+				if err == io.EOF {
+					logrus.Errorf("server recv data from ingress error: %v", err)
+					return
 				}
+				if err != nil {
+					logrus.Errorf("server recv data from ingress error: %v", err)
+					continue
+				}
+
+				logrus.Infof("server recv data from ingress length: %d", n)
 
 				if err := cli.Send(&protogen.Response{Payload: recv_data[:n]}); err != nil {
-					fmt.Println(err, err.Error())
-					dest_con.Close()
-					break
+					logrus.Errorf("server send data to cli error: %v", err)
+					continue
 				}
 			}
-		}()
-		go func() {
+		}(dest_con)
+		go func(dest_con net.Conn) {
 			for {
 				in, err := cli.Recv()
 				if err == io.EOF {
-					dest_con.Close()
+					logrus.Errorf("server recv data from client error: %v", err)
 					return
 				}
 				if err != nil {
-					fmt.Println(err, err.Error())
-					dest_con.Close()
-					return
+					logrus.Errorf("server recv data from client error: %v", err)
+					continue
 				}
+				logrus.Infof("server recv data from client ,length: %d", len(in.Payload))
 				if _, err := dest_con.Write(in.Payload); err != nil {
-					fmt.Println(err, err.Error())
-					dest_con.Close()
-					return
+					logrus.Errorf("server send data to ingress error: %v", err)
+					continue
 				}
 			}
-		}()
+		}(dest_con)
 	}
 }
