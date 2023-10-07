@@ -33,7 +33,7 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 	cli, _ := NewClient(rpcPort)
 	cli.Register(context.Background(), &protogen.Tunnel{
 		Port:     ingressPort,
-		ClientId: clientID,
+		ClientID: clientID,
 	})
 
 	c, err := cli.Call(context.Background())
@@ -42,7 +42,7 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 		return
 	}
 	c.Send(&protogen.Request{Signal: protogen.Signal_OPEN,
-		ClientId: clientID})
+		ClientID: clientID})
 	go func() {
 		for {
 			recv_data := make([]byte, 2048)

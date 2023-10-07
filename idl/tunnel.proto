@@ -12,7 +12,7 @@ message Request {
 	int64 Seq = 1;
 	bytes Payload = 2;
 	Signal Signal = 3;
-	string ClientId = 4;
+	string ClientID = 4;
 }
 
 message Response {
@@ -23,10 +23,19 @@ message Response {
 message Tunnel {
 	string Id = 1;
 	int64 Port = 2;
-	string ClientId = 3;
+	string ClientID = 3;
+}
+
+message DeleteRequest {
+	string ClientID = 1;
+}
+
+message DeleteResponse {
+	bool Success = 1;
 }
 
 service TunnelServer {
 	rpc Call(stream Request) returns (stream Response);
 	rpc Register(Tunnel) returns (Tunnel);
+	rpc Delete(DeleteRequest) returns (DeleteResponse);
 }

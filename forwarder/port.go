@@ -31,8 +31,8 @@ func (l *ListenerImpl) RegTunnel(tun *protogen.Tunnel) {
 		fmt.Println(err, err.Error())
 		os.Exit(0)
 	}
-	l.ClientMap.Store(tun.GetClientId(), &li)
-	l.InfoMap.Store(tun.GetClientId(), tun)
+	l.ClientMap.Store(tun.GetClientID(), &li)
+	l.InfoMap.Store(tun.GetClientID(), tun)
 }
 
 func (l *ListenerImpl) GetListener(clientID string) (*net.Listener, error) {
