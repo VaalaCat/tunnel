@@ -15,19 +15,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-var dest *client.Destination
-
 func main() {
 	go runServer()
 	time.Sleep(1 * time.Second)
 
-	var err error
 	address := fmt.Sprintf("127.0.0.1:%d", config.Get().ClientForwardPort)
-	if dest, err = client.NewDestination(address); err != nil {
-		panic(err)
-	}
 
-	runClient()
+	go runClient(int64(7002), address)
+	runClient(int64(7005), "127.0.0.1:7004")
 }
 
 func runServer() {
@@ -42,8 +37,18 @@ func runServer() {
 	go srv.Serve(lis)
 }
 
-func runClient() {
+func runClient(port int64, address string) {
+
+	dest, err := client.NewDestination(address)
+	if err != nil {
+		logrus.Infof("make dest error: %v", err)
+		return
+	}
+
 	cli, _ := client.NewClient()
+	cli.Register(context.Background(), &protogen.Tunnel{
+		Port: port,
+	})
 
 	c, err := cli.Call(context.Background())
 	if err != nil {
