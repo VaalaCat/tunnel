@@ -5,28 +5,59 @@ import (
 	"io"
 	"net"
 	"os"
-	"tunnel/config"
+	"sync"
 	"tunnel/protogen"
 
 	"github.com/sirupsen/logrus"
 )
 
-var l net.Listener
+type Listener interface {
+	RegTunnel(*protogen.Tunnel)
+	GetTunnel(string) (*net.Listener, error)
+}
 
-func init() {
-	var err error
+type ListenerImpl struct {
+	ClientMap *sync.Map
+}
+
+var globalLis Listener
+
+func (l *ListenerImpl) RegTunnel(tun *protogen.Tunnel) {
 	host := "0.0.0.0"
-	l, err = net.Listen("tcp", fmt.Sprintf("%s:%d", host, config.Get().ServerIngressPort))
+	li, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, tun.GetPort()))
 	if err != nil {
 		fmt.Println(err, err.Error())
 		os.Exit(0)
 	}
+	l.ClientMap.Store(tun.GetClientId(), &li)
 }
 
-func ListenAndServe(cli protogen.TunnelServer_CallServer) (err error) {
+func (l *ListenerImpl) GetTunnel(clientID string) (*net.Listener, error) {
+	rawli, ok := l.ClientMap.Load(clientID)
+	if !ok || rawli == nil {
+		return nil, fmt.Errorf("load raw listener faild")
+	}
+
+	return rawli.(*net.Listener), nil
+}
+
+func GetListener() Listener {
+	if globalLis == nil {
+		globalLis = &ListenerImpl{
+			ClientMap: &sync.Map{},
+		}
+	}
+	return globalLis
+}
+
+func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err error) {
 	for {
+		lis, err := GetListener().GetTunnel(clientID)
+		if err != nil {
+			return err
+		}
 		var dest_con net.Conn
-		dest_con, err = l.Accept()
+		dest_con, err = (*lis).Accept()
 		if err != nil {
 			continue
 		}

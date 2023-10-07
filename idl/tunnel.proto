@@ -5,12 +5,14 @@ option go_package = "./protogen";
 enum Signal {
 	UNKNOWN = 0;
 	CLOSE = 1;
+	OPEN = 2;
 }
 
 message Request {
 	int64 Seq = 1;
 	bytes Payload = 2;
 	Signal Signal = 3;
+	string ClientId = 4;
 }
 
 message Response {
