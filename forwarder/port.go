@@ -15,6 +15,7 @@ type Listener interface {
 	RegTunnel(*protogen.Tunnel)
 	GetListener(string) (*net.Listener, error)
 	GetTunnelInfo(string) (*protogen.Tunnel, error)
+	DeleteTunnel(string) error
 }
 
 type ListenerImpl struct {
@@ -51,6 +52,27 @@ func (l *ListenerImpl) GetTunnelInfo(clientID string) (*protogen.Tunnel, error) 
 	}
 
 	return rawli.(*protogen.Tunnel), nil
+}
+
+func (l *ListenerImpl) DeleteTunnel(clientID string) error {
+	lis, ok := l.ClientMap.Load(clientID)
+	if !ok || lis == nil {
+		return fmt.Errorf("load raw listener faild")
+	}
+
+	if err := (*lis.(*net.Listener)).Close(); err != nil {
+		logrus.Errorf("close listener error: %v", err)
+	}
+
+	tunnel, ok := l.InfoMap.Load(clientID)
+	if !ok || tunnel == nil {
+		logrus.Errorf("load tunnel info error")
+	}
+
+	l.ClientMap.Delete(clientID)
+	l.InfoMap.Delete(clientID)
+	logrus.Errorf("delete tunnel: %+v", tunnel)
+	return nil
 }
 
 func GetListener() Listener {

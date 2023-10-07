@@ -25,6 +25,7 @@ func (t *TunnelServer) Register(ctx context.Context, tun *protogen.Tunnel) (*pro
 	return tun, nil
 }
 
-func (*TunnelServer) Delete(context.Context, *protogen.DeleteRequest) (*protogen.DeleteResponse, error) {
-	return nil, nil
+func (*TunnelServer) Delete(ctx context.Context, req *protogen.DeleteRequest) (*protogen.DeleteResponse, error) {
+	err := forwarder.GetListener().DeleteTunnel(req.GetClientID())
+	return &protogen.DeleteResponse{Success: err == nil}, err
 }

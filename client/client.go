@@ -43,33 +43,40 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 	}
 	c.Send(&protogen.Request{Signal: protogen.Signal_OPEN,
 		ClientID: clientID})
+	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
 		for {
-			recv_data := make([]byte, 2048)
-			n, err := dest.Read(recv_data)
+			select {
+			case <-ctx.Done():
+				logrus.Warnf("client:%v get context done, err: %v", clientID, ctx.Err())
+				return
+			default:
+				recv_data := make([]byte, 2048)
+				n, err := dest.Read(recv_data)
 
-			if err == io.EOF {
-				logrus.Debugf("client read data from dest, err: %v", err)
-				dest.Refresh()
-				c.Send(&protogen.Request{Signal: protogen.Signal_CLOSE})
-				continue
-			}
-
-			if err != nil {
-				logrus.Debugf("client read data from dest, err: %v", err)
-				dest, err = NewDestination(forwardAddress)
-				if err != nil {
-					logrus.Debugf("make dest error: %v", err)
-					return
+				if err == io.EOF {
+					logrus.Debugf("client read data from dest, err: %v", err)
+					dest.Refresh()
+					c.Send(&protogen.Request{Signal: protogen.Signal_CLOSE})
+					continue
 				}
-				continue
-			}
 
-			logrus.Debugf("client read data from dest, length: %d", n)
-			if err := c.Send(&protogen.Request{Payload: recv_data[:n]}); err != nil {
-				logrus.Error("send data to server, err:", err)
-			} else {
-				logrus.Debugf("client send data to server, length: %d", n)
+				if err != nil {
+					logrus.Debugf("client read data from dest, err: %v", err)
+					dest, err = NewDestination(forwardAddress)
+					if err != nil {
+						logrus.Debugf("make dest error: %v", err)
+						return
+					}
+					continue
+				}
+
+				logrus.Debugf("client read data from dest, length: %d", n)
+				if err := c.Send(&protogen.Request{Payload: recv_data[:n]}); err != nil {
+					logrus.Error("send data to server, err:", err)
+				} else {
+					logrus.Debugf("client send data to server, length: %d", n)
+				}
 			}
 		}
 	}()
@@ -81,6 +88,8 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 		}
 		if err != nil {
 			logrus.Debugf("client get data from server: %v", err)
+			cancel()
+			return
 		}
 
 		if err != nil {
@@ -92,4 +101,9 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 			logrus.Debugf("client send data to dest length: %d", n)
 		}
 	}
+}
+
+func DeleteClient(rpcPort int64, clientID string) {
+	cli, _ := NewClient(rpcPort)
+	cli.Delete(context.Background(), &protogen.DeleteRequest{ClientID: clientID})
 }

@@ -4,12 +4,17 @@ import (
 	"time"
 	"tunnel/client"
 	"tunnel/server"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	logrus.SetLevel(logrus.DebugLevel)
 	go server.RunServer(7001)
 	time.Sleep(1 * time.Second)
 
 	go client.RunClient(7001, 7002, "127.0.0.1:7003", "1")
+	time.Sleep(1 * time.Second)
+	client.DeleteClient(7001, "1")
 	client.RunClient(7001, 7005, "127.0.0.1:7006", "2")
 }
