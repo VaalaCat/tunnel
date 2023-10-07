@@ -2,9 +2,9 @@ package main
 
 import (
 	"time"
-	"tunnel/client"
-	"tunnel/server"
 
+	"github.com/VaalaCat/tunnel/client"
+	"github.com/VaalaCat/tunnel/server"
 	"github.com/sirupsen/logrus"
 )
 

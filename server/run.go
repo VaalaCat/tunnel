@@ -3,8 +3,8 @@ package server
 import (
 	"fmt"
 	"net"
-	"tunnel/protogen"
 
+	"github.com/VaalaCat/tunnel/protogen"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

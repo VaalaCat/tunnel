@@ -6,8 +6,8 @@ import (
 	"net"
 	"os"
 	"sync"
-	"tunnel/protogen"
 
+	"github.com/VaalaCat/tunnel/protogen"
 	"github.com/sirupsen/logrus"
 )
 

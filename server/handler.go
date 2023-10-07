@@ -3,8 +3,9 @@ package server
 import (
 	"context"
 	"fmt"
-	"tunnel/forwarder"
-	"tunnel/protogen"
+
+	"github.com/VaalaCat/tunnel/forwarder"
+	"github.com/VaalaCat/tunnel/protogen"
 )
 
 type TunnelServer struct{}

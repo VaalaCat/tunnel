@@ -1,4 +1,4 @@
-module tunnel
+module github.com/VaalaCat/tunnel
 
 go 1.20
 

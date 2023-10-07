@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"tunnel/protogen"
 
+	"github.com/VaalaCat/tunnel/protogen"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
