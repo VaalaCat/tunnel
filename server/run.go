@@ -14,7 +14,7 @@ func RunServer(port int64) {
 	if err != nil {
 		panic(err)
 	}
-	logrus.Infof("Server listening on port %d", port)
+	logrus.Debugf("Server listening on port %d", port)
 
 	srv := grpc.NewServer([]grpc.ServerOption{}...)
 	protogen.RegisterTunnelServerServer(srv, &TunnelServer{})

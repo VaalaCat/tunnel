@@ -3,12 +3,14 @@ package client
 import (
 	"net"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Destination struct {
-	writeFinish bool
-	address     string
-	conn        *net.TCPConn
+	writeStart bool
+	address    string
+	conn       *net.TCPConn
 }
 
 func NewDestination(address string) (*Destination, error) {
@@ -27,18 +29,18 @@ func NewDestination(address string) (*Destination, error) {
 	d_conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
 	d_conn.SetWriteBuffer(2048)
 	return &Destination{
-		conn:        d_conn,
-		address:     address,
-		writeFinish: false,
+		conn:       d_conn,
+		address:    address,
+		writeStart: false,
 	}, nil
 }
 
-func (d *Destination) WriteFinish() {
-	d.writeFinish = true
+func (d *Destination) WriteStart() {
+	d.writeStart = true
 }
 
 func (d *Destination) CanRead() bool {
-	return d.conn != nil
+	return d.writeStart
 }
 
 func (d *Destination) Write(data []byte) (int, error) {
@@ -57,11 +59,13 @@ func (d *Destination) Refresh() {
 	}
 	d_tcpAddr, err := net.ResolveTCPAddr("tcp4", d.address)
 	if err != nil {
+		logrus.Errorf("refresh dest error: %v", err)
 		return
 	}
 
 	d_conn, err := net.DialTCP("tcp", nil, d_tcpAddr)
 	if err != nil {
+		logrus.Errorf("refresh dest error: %v", err)
 		return
 	}
 	d_conn.SetKeepAlive(true)

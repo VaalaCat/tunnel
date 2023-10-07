@@ -13,11 +13,13 @@ import (
 
 type Listener interface {
 	RegTunnel(*protogen.Tunnel)
-	GetTunnel(string) (*net.Listener, error)
+	GetListener(string) (*net.Listener, error)
+	GetTunnelInfo(string) (*protogen.Tunnel, error)
 }
 
 type ListenerImpl struct {
 	ClientMap *sync.Map
+	InfoMap   *sync.Map
 }
 
 var globalLis Listener
@@ -30,9 +32,10 @@ func (l *ListenerImpl) RegTunnel(tun *protogen.Tunnel) {
 		os.Exit(0)
 	}
 	l.ClientMap.Store(tun.GetClientId(), &li)
+	l.InfoMap.Store(tun.GetClientId(), tun)
 }
 
-func (l *ListenerImpl) GetTunnel(clientID string) (*net.Listener, error) {
+func (l *ListenerImpl) GetListener(clientID string) (*net.Listener, error) {
 	rawli, ok := l.ClientMap.Load(clientID)
 	if !ok || rawli == nil {
 		return nil, fmt.Errorf("load raw listener faild")
@@ -41,10 +44,20 @@ func (l *ListenerImpl) GetTunnel(clientID string) (*net.Listener, error) {
 	return rawli.(*net.Listener), nil
 }
 
+func (l *ListenerImpl) GetTunnelInfo(clientID string) (*protogen.Tunnel, error) {
+	rawli, ok := l.InfoMap.Load(clientID)
+	if !ok || rawli == nil {
+		return nil, fmt.Errorf("load raw listener faild")
+	}
+
+	return rawli.(*protogen.Tunnel), nil
+}
+
 func GetListener() Listener {
 	if globalLis == nil {
 		globalLis = &ListenerImpl{
 			ClientMap: &sync.Map{},
+			InfoMap:   &sync.Map{},
 		}
 	}
 	return globalLis
@@ -52,7 +65,7 @@ func GetListener() Listener {
 
 func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err error) {
 	for {
-		lis, err := GetListener().GetTunnel(clientID)
+		lis, err := GetListener().GetListener(clientID)
 		if err != nil {
 			return err
 		}
@@ -61,7 +74,11 @@ func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err 
 		if err != nil {
 			continue
 		}
-		logrus.Info("new connection")
+		tunnel, err := GetListener().GetTunnelInfo(clientID)
+		if err != nil {
+			return err
+		}
+		logrus.Infof("server get new connection from client: %+v", tunnel)
 
 		go func(dest_con net.Conn) {
 			seq := int64(0)
@@ -69,11 +86,11 @@ func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err 
 				recv_data := make([]byte, 1024)
 				n, err := dest_con.Read(recv_data)
 				if err != nil {
-					logrus.Errorf("server recv data from ingress error: %v", err)
+					logrus.Debugf("server recv data from ingress error: %v", err)
 					return
 				}
 
-				logrus.Infof("server recv data from ingress length: %d", n)
+				logrus.Debugf("server recv data from ingress length: %d", n)
 
 				seq++
 				if err := cli.Send(&protogen.Response{
@@ -90,17 +107,17 @@ func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err 
 				in, err := cli.Recv()
 				if err == io.EOF || in.GetSignal() == protogen.Signal_CLOSE {
 					dest_con.Close()
-					logrus.Infof("server recv data from client should close")
+					logrus.Debugf("server recv data from client should close")
 					return
 				}
 
-				logrus.Infof("server recv data from client ,length: %d", len(in.Payload))
+				logrus.Debugf("server recv data from client ,length: %d", len(in.Payload))
 				if _, err := dest_con.Write(in.Payload); err != nil {
 					logrus.Errorf("server send data to ingress error: %v", err)
 				} else {
-					logrus.Infof("server send data to ingress, length: %d", len(in.Payload))
+					logrus.Debugf("server send data to ingress, length: %d", len(in.Payload))
 				}
-				logrus.Infof("ingress address : %v", &dest_con)
+				logrus.Debugf("ingress address : %v", &dest_con)
 
 			}
 		}(dest_con)
