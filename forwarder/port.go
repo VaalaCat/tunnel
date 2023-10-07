@@ -5,81 +5,121 @@ import (
 	"io"
 	"net"
 	"os"
-	"tunnel/config"
+	"sync"
 	"tunnel/protogen"
 
 	"github.com/sirupsen/logrus"
 )
 
-var dest_con net.Conn
-var l net.Listener
+type Listener interface {
+	RegTunnel(*protogen.Tunnel)
+	GetListener(string) (*net.Listener, error)
+	GetTunnelInfo(string) (*protogen.Tunnel, error)
+}
 
-func init() {
-	var err error
+type ListenerImpl struct {
+	ClientMap *sync.Map
+	InfoMap   *sync.Map
+}
+
+var globalLis Listener
+
+func (l *ListenerImpl) RegTunnel(tun *protogen.Tunnel) {
 	host := "0.0.0.0"
-	l, err = net.Listen("tcp", fmt.Sprintf("%s:%d", host, config.Get().ServerIngressPort))
+	li, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, tun.GetPort()))
 	if err != nil {
 		fmt.Println(err, err.Error())
 		os.Exit(0)
 	}
+	l.ClientMap.Store(tun.GetClientId(), &li)
+	l.InfoMap.Store(tun.GetClientId(), tun)
 }
 
-func ListenAndServe(cli protogen.TunnelServer_CallServer) (err error) {
-	done := make(chan bool)
-	for {
-		select {
-		case <-done:
-			return nil
-		default:
-			dest_con, err = l.Accept()
-			if err != nil {
-				continue
-			}
-			logrus.Info("new connection")
+func (l *ListenerImpl) GetListener(clientID string) (*net.Listener, error) {
+	rawli, ok := l.ClientMap.Load(clientID)
+	if !ok || rawli == nil {
+		return nil, fmt.Errorf("load raw listener faild")
+	}
 
-			go func(dest_con net.Conn) {
-				for {
-					recv_data := make([]byte, 1024)
-					n, err := dest_con.Read(recv_data)
-					if err == io.EOF {
-						logrus.Errorf("server recv data from ingress error: %v", err)
-						done <- true
-						return
-					}
-					if err != nil {
-						logrus.Errorf("server recv data from ingress error: %v", err)
-						done <- true
-						return
-					}
+	return rawli.(*net.Listener), nil
+}
 
-					logrus.Infof("server recv data from ingress length: %d", n)
+func (l *ListenerImpl) GetTunnelInfo(clientID string) (*protogen.Tunnel, error) {
+	rawli, ok := l.InfoMap.Load(clientID)
+	if !ok || rawli == nil {
+		return nil, fmt.Errorf("load raw listener faild")
+	}
 
-					if err := cli.Send(&protogen.Response{Payload: recv_data[:n]}); err != nil {
-						logrus.Errorf("server send data to cli error: %v", err)
-						continue
-					}
-				}
-			}(dest_con)
-			go func(dest_con net.Conn) {
-				for {
-					in, err := cli.Recv()
-					if err == io.EOF {
-						logrus.Errorf("server recv data from client error: %v", err)
-						done <- true
-						return
-					}
-					if err != nil {
-						logrus.Errorf("server recv data from client error: %v", err)
-						done <- true
-						return
-					}
-					logrus.Infof("server recv data from client ,length: %d", len(in.Payload))
-					if _, err := dest_con.Write(in.Payload); err != nil {
-						logrus.Errorf("server send data to ingress error: %v", err)
-						continue
-					}
-				}
-			}(dest_con)
+	return rawli.(*protogen.Tunnel), nil
+}
+
+func GetListener() Listener {
+	if globalLis == nil {
+		globalLis = &ListenerImpl{
+			ClientMap: &sync.Map{},
+			InfoMap:   &sync.Map{},
 		}
+	}
+	return globalLis
+}
+
+func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err error) {
+	for {
+		lis, err := GetListener().GetListener(clientID)
+		if err != nil {
+			return err
+		}
+		var dest_con net.Conn
+		dest_con, err = (*lis).Accept()
+		if err != nil {
+			continue
+		}
+		tunnel, err := GetListener().GetTunnelInfo(clientID)
+		if err != nil {
+			return err
+		}
+		logrus.Infof("server get new connection from client: %+v", tunnel)
+
+		go func(dest_con net.Conn) {
+			seq := int64(0)
+			for {
+				recv_data := make([]byte, 1024)
+				n, err := dest_con.Read(recv_data)
+				if err != nil {
+					logrus.Debugf("server recv data from ingress error: %v", err)
+					return
+				}
+
+				logrus.Debugf("server recv data from ingress length: %d", n)
+
+				seq++
+				if err := cli.Send(&protogen.Response{
+					Seq:     seq,
+					Payload: recv_data[:n],
+				}); err != nil {
+					logrus.Errorf("server send data to cli error: %v", err)
+				}
+			}
+		}(dest_con)
+
+		go func(dest_con net.Conn) {
+			for {
+				in, err := cli.Recv()
+				if err == io.EOF || in.GetSignal() == protogen.Signal_CLOSE {
+					dest_con.Close()
+					logrus.Debugf("server recv data from client should close")
+					return
+				}
+
+				logrus.Debugf("server recv data from client ,length: %d", len(in.Payload))
+				if _, err := dest_con.Write(in.Payload); err != nil {
+					logrus.Errorf("server send data to ingress error: %v", err)
+				} else {
+					logrus.Debugf("server send data to ingress, length: %d", len(in.Payload))
+				}
+				logrus.Debugf("ingress address : %v", &dest_con)
+
+			}
+		}(dest_con)
 	}
 }

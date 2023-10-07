@@ -1,3 +1,3 @@
 #!/bin/bash
 
-protoc --go_out=plugins=grpc:. ./idl/*.proto -I ./
+/usr/local/bin/protoc --go_out=plugins=grpc:. ./idl/*.proto -I ./
