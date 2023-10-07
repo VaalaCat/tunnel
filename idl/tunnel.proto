@@ -2,12 +2,20 @@ syntax = "proto3";
 
 option go_package = "./protogen";
 
+enum Signal {
+	UNKNOWN = 0;
+	CLOSE = 1;
+}
+
 message Request {
-	bytes Payload = 1;
+	int64 Seq = 1;
+	bytes Payload = 2;
+	Signal Signal = 3;
 }
 
 message Response {
-	bytes Payload = 1;
+	int64 Seq = 1;
+	bytes Payload = 2;
 }
 
 message Tunnel {
