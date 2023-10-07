@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewClient(rpcPort int64) (protogen.TunnelServerClient, *grpc.ClientConn) {
-	conn, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", rpcPort),
+func NewClient(rpcHost string, rpcPort int64) (protogen.TunnelServerClient, *grpc.ClientConn) {
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", rpcHost, rpcPort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
