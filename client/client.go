@@ -22,7 +22,7 @@ func NewClient(rpcHost string, rpcPort int64) (protogen.TunnelServerClient, *grp
 	return client, conn
 }
 
-func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
+func RunClient(rpcHost string, rpcPort, ingressPort int64, forwardAddress, clientID string) {
 
 	dest, err := NewDestination(forwardAddress)
 	if err != nil {
@@ -30,7 +30,7 @@ func RunClient(rpcPort, ingressPort int64, forwardAddress, clientID string) {
 		return
 	}
 
-	cli, _ := NewClient(rpcPort)
+	cli, _ := NewClient(rpcHost, rpcPort)
 	cli.Register(context.Background(), &protogen.Tunnel{
 		Port:     ingressPort,
 		ClientID: clientID,
