@@ -137,11 +137,12 @@ func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err 
 				logrus.Debugf("server recv data from client ,length: %d", len(in.Payload))
 				if _, err := dest_con.Write(in.Payload); err != nil {
 					logrus.Errorf("server send data to ingress error: %v", err)
+					dest_con.Close()
+					return
 				} else {
 					logrus.Debugf("server send data to ingress, length: %d", len(in.Payload))
 				}
 				logrus.Debugf("ingress address : %v", &dest_con)
-
 			}
 		}(dest_con)
 	}
