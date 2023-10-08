@@ -356,6 +356,100 @@ func (x *DeleteResponse) GetSuccess() bool {
 	return false
 }
 
+type QueryTunnelRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClientID string `protobuf:"bytes,1,opt,name=ClientID,proto3" json:"ClientID,omitempty"`
+}
+
+func (x *QueryTunnelRequest) Reset() {
+	*x = QueryTunnelRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_idl_tunnel_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *QueryTunnelRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QueryTunnelRequest) ProtoMessage() {}
+
+func (x *QueryTunnelRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_idl_tunnel_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QueryTunnelRequest.ProtoReflect.Descriptor instead.
+func (*QueryTunnelRequest) Descriptor() ([]byte, []int) {
+	return file_idl_tunnel_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *QueryTunnelRequest) GetClientID() string {
+	if x != nil {
+		return x.ClientID
+	}
+	return ""
+}
+
+type QueryTunnelResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Tunnel *Tunnel `protobuf:"bytes,1,opt,name=Tunnel,proto3" json:"Tunnel,omitempty"`
+}
+
+func (x *QueryTunnelResponse) Reset() {
+	*x = QueryTunnelResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_idl_tunnel_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *QueryTunnelResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QueryTunnelResponse) ProtoMessage() {}
+
+func (x *QueryTunnelResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_idl_tunnel_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QueryTunnelResponse.ProtoReflect.Descriptor instead.
+func (*QueryTunnelResponse) Descriptor() ([]byte, []int) {
+	return file_idl_tunnel_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *QueryTunnelResponse) GetTunnel() *Tunnel {
+	if x != nil {
+		return x.Tunnel
+	}
+	return nil
+}
+
 var File_idl_tunnel_proto protoreflect.FileDescriptor
 
 var file_idl_tunnel_proto_rawDesc = []byte{
@@ -381,18 +475,29 @@ var file_idl_tunnel_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x74, 0x49, 0x44, 0x22, 0x2a, 0x0a, 0x0e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x53, 0x75, 0x63, 0x63, 0x65,
 	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x53, 0x75, 0x63, 0x63, 0x65, 0x73,
-	0x73, 0x2a, 0x2a, 0x0a, 0x06, 0x53, 0x69, 0x67, 0x6e, 0x61, 0x6c, 0x12, 0x0b, 0x0a, 0x07, 0x55,
-	0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x43, 0x4c, 0x4f, 0x53,
-	0x45, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x4f, 0x50, 0x45, 0x4e, 0x10, 0x02, 0x32, 0x78, 0x0a,
-	0x0c, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1f, 0x0a,
-	0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x08, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x09, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x12, 0x1c,
-	0x0a, 0x08, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x07, 0x2e, 0x54, 0x75, 0x6e,
-	0x6e, 0x65, 0x6c, 0x1a, 0x07, 0x2e, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x12, 0x29, 0x0a, 0x06,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x0e, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x0c, 0x5a, 0x0a, 0x2e, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x22, 0x30, 0x0a, 0x12, 0x51, 0x75, 0x65, 0x72, 0x79, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x43, 0x6c, 0x69, 0x65, 0x6e,
+	0x74, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x43, 0x6c, 0x69, 0x65, 0x6e,
+	0x74, 0x49, 0x44, 0x22, 0x36, 0x0a, 0x13, 0x51, 0x75, 0x65, 0x72, 0x79, 0x54, 0x75, 0x6e, 0x6e,
+	0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x06, 0x54, 0x75,
+	0x6e, 0x6e, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x54, 0x75, 0x6e,
+	0x6e, 0x65, 0x6c, 0x52, 0x06, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x2a, 0x2a, 0x0a, 0x06, 0x53,
+	0x69, 0x67, 0x6e, 0x61, 0x6c, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e,
+	0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x43, 0x4c, 0x4f, 0x53, 0x45, 0x10, 0x01, 0x12, 0x08, 0x0a,
+	0x04, 0x4f, 0x50, 0x45, 0x4e, 0x10, 0x02, 0x32, 0xb2, 0x01, 0x0a, 0x0c, 0x54, 0x75, 0x6e, 0x6e,
+	0x65, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x1f, 0x0a, 0x04, 0x43, 0x61, 0x6c, 0x6c,
+	0x12, 0x08, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x09, 0x2e, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x12, 0x1c, 0x0a, 0x08, 0x52, 0x65, 0x67,
+	0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x07, 0x2e, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x1a, 0x07,
+	0x2e, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x12, 0x29, 0x0a, 0x06, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x12, 0x0e, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x0f, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x38, 0x0a, 0x0b, 0x51, 0x75, 0x65, 0x72, 0x79, 0x54, 0x75, 0x6e, 0x6e, 0x65,
+	0x6c, 0x12, 0x13, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x54, 0x75, 0x6e, 0x6e, 0x65, 0x6c, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x54, 0x75,
+	0x6e, 0x6e, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x0c, 0x5a, 0x0a,
+	0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -408,28 +513,33 @@ func file_idl_tunnel_proto_rawDescGZIP() []byte {
 }
 
 var file_idl_tunnel_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_idl_tunnel_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_idl_tunnel_proto_goTypes = []interface{}{
-	(Signal)(0),            // 0: Signal
-	(*Request)(nil),        // 1: Request
-	(*Response)(nil),       // 2: Response
-	(*Tunnel)(nil),         // 3: Tunnel
-	(*DeleteRequest)(nil),  // 4: DeleteRequest
-	(*DeleteResponse)(nil), // 5: DeleteResponse
+	(Signal)(0),                 // 0: Signal
+	(*Request)(nil),             // 1: Request
+	(*Response)(nil),            // 2: Response
+	(*Tunnel)(nil),              // 3: Tunnel
+	(*DeleteRequest)(nil),       // 4: DeleteRequest
+	(*DeleteResponse)(nil),      // 5: DeleteResponse
+	(*QueryTunnelRequest)(nil),  // 6: QueryTunnelRequest
+	(*QueryTunnelResponse)(nil), // 7: QueryTunnelResponse
 }
 var file_idl_tunnel_proto_depIdxs = []int32{
 	0, // 0: Request.Signal:type_name -> Signal
-	1, // 1: TunnelServer.Call:input_type -> Request
-	3, // 2: TunnelServer.Register:input_type -> Tunnel
-	4, // 3: TunnelServer.Delete:input_type -> DeleteRequest
-	2, // 4: TunnelServer.Call:output_type -> Response
-	3, // 5: TunnelServer.Register:output_type -> Tunnel
-	5, // 6: TunnelServer.Delete:output_type -> DeleteResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3, // 1: QueryTunnelResponse.Tunnel:type_name -> Tunnel
+	1, // 2: TunnelServer.Call:input_type -> Request
+	3, // 3: TunnelServer.Register:input_type -> Tunnel
+	4, // 4: TunnelServer.Delete:input_type -> DeleteRequest
+	6, // 5: TunnelServer.QueryTunnel:input_type -> QueryTunnelRequest
+	2, // 6: TunnelServer.Call:output_type -> Response
+	3, // 7: TunnelServer.Register:output_type -> Tunnel
+	5, // 8: TunnelServer.Delete:output_type -> DeleteResponse
+	7, // 9: TunnelServer.QueryTunnel:output_type -> QueryTunnelResponse
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_idl_tunnel_proto_init() }
@@ -498,6 +608,30 @@ func file_idl_tunnel_proto_init() {
 				return nil
 			}
 		}
+		file_idl_tunnel_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*QueryTunnelRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_idl_tunnel_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*QueryTunnelResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -505,7 +639,7 @@ func file_idl_tunnel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_idl_tunnel_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -535,6 +669,7 @@ type TunnelServerClient interface {
 	Call(ctx context.Context, opts ...grpc.CallOption) (TunnelServer_CallClient, error)
 	Register(ctx context.Context, in *Tunnel, opts ...grpc.CallOption) (*Tunnel, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	QueryTunnel(ctx context.Context, in *QueryTunnelRequest, opts ...grpc.CallOption) (*QueryTunnelResponse, error)
 }
 
 type tunnelServerClient struct {
@@ -594,11 +729,21 @@ func (c *tunnelServerClient) Delete(ctx context.Context, in *DeleteRequest, opts
 	return out, nil
 }
 
+func (c *tunnelServerClient) QueryTunnel(ctx context.Context, in *QueryTunnelRequest, opts ...grpc.CallOption) (*QueryTunnelResponse, error) {
+	out := new(QueryTunnelResponse)
+	err := c.cc.Invoke(ctx, "/TunnelServer/QueryTunnel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TunnelServerServer is the server API for TunnelServer service.
 type TunnelServerServer interface {
 	Call(TunnelServer_CallServer) error
 	Register(context.Context, *Tunnel) (*Tunnel, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	QueryTunnel(context.Context, *QueryTunnelRequest) (*QueryTunnelResponse, error)
 }
 
 // UnimplementedTunnelServerServer can be embedded to have forward compatible implementations.
@@ -613,6 +758,9 @@ func (*UnimplementedTunnelServerServer) Register(context.Context, *Tunnel) (*Tun
 }
 func (*UnimplementedTunnelServerServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (*UnimplementedTunnelServerServer) QueryTunnel(context.Context, *QueryTunnelRequest) (*QueryTunnelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryTunnel not implemented")
 }
 
 func RegisterTunnelServerServer(s *grpc.Server, srv TunnelServerServer) {
@@ -681,6 +829,24 @@ func _TunnelServer_Delete_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TunnelServer_QueryTunnel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTunnelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TunnelServerServer).QueryTunnel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/TunnelServer/QueryTunnel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TunnelServerServer).QueryTunnel(ctx, req.(*QueryTunnelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _TunnelServer_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "TunnelServer",
 	HandlerType: (*TunnelServerServer)(nil),
@@ -692,6 +858,10 @@ var _TunnelServer_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _TunnelServer_Delete_Handler,
+		},
+		{
+			MethodName: "QueryTunnel",
+			Handler:    _TunnelServer_QueryTunnel_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -30,3 +30,11 @@ func (*TunnelServer) Delete(ctx context.Context, req *protogen.DeleteRequest) (*
 	err := forwarder.GetListener().DeleteTunnel(req.GetClientID())
 	return &protogen.DeleteResponse{Success: err == nil}, err
 }
+
+func (*TunnelServer) QueryTunnel(ctx context.Context, req *protogen.QueryTunnelRequest) (*protogen.QueryTunnelResponse, error) {
+	tun, err := forwarder.GetListener().GetTunnelInfo(req.GetClientID())
+	if err != nil || tun == nil {
+		return nil, fmt.Errorf("query tunnel error")
+	}
+	return &protogen.QueryTunnelResponse{Tunnel: tun}, nil
+}
