@@ -109,7 +109,9 @@ func ListenAndServe(cli protogen.TunnelServer_CallServer, clientID string) (err 
 				n, err := dest_con.Read(recv_data)
 				if err != nil {
 					logrus.Debugf("server recv data from ingress error: %v", err)
-					dest_con.Close()
+					if err == io.EOF {
+						dest_con.Close()
+					}
 					return
 				}
 
